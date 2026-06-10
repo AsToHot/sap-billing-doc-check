@@ -170,4 +170,8 @@ VBRK 查不到记录                ❌  幽灵凭证
 
 MIT — 详见 [LICENSE](LICENSE)
 
-> **注意**：NW-RFC-SDK 是 SAP 专有软件，需从 SAP 官方渠道获取，不包含在本仓库中。
+> **注意**：
+> - NW-RFC-SDK 是 SAP 专有软件，**不包含在本仓库中**
+> - 当前开发环境使用版本：**SAP NW-RFC-SDK 7.50 for Linux x86_64**
+> - 其他平台（Windows、macOS）需从 SAP 官方渠道获取对应版本
+> - 下载后放置到 `NW-RFC-SDK/nwrfcsdk/` 目录即可
