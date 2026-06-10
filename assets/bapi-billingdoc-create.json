@@ -1,0 +1,44 @@
+{
+  "_description": "BAPI_BILLINGDOC_CREATEMULTIPLE 参数模板",
+  "_note": "TESTRUN='X' 为模拟运行，空字符串为正式执行",
+  "CREATORDATA_IN": {
+    "CREATOR_TYPE": "",
+    "CREATOR": "",
+    "CREATORDEPT": ""
+  },
+  "BILLINGDATA_IN": [
+    {
+      "_description": "每一行对应一个开票项目",
+      "REF_DOC": "80000001",
+      "REF_ITEM": "10",
+      "DOC_NUMBER": "",
+      "ITM_NUMBER": "",
+      "BILL_DATE": "2026-04-28",
+      "MATERIAL": "MAT001",
+      "BILL_QTY": 100,
+      "SALES_UNIT": "EA",
+      "NET_VALUE": 5000.00,
+      "CURRENCY": "CNY",
+      "COND_TYPE": "",
+      "COND_VALUE": 0,
+      "TAX_CODE": "",
+      "PRICE_DATE": "2026-04-28",
+      "PRICE_LIST": "",
+      "PLANT": "1000",
+      "SHIP_POINT": "",
+      "PRC_GROUP1": "",
+      "PRC_GROUP2": "",
+      "ITEM_CATEGORY": "",
+      "MATERIAL_GROUP": ""
+    }
+  ],
+  "CONDITIONDATA_IN": [],
+  "CCARDDATA_IN": [],
+  "TEXTDATA_IN": [],
+  "ERRORS": [],
+  "RETURN": [],
+  "SUCCESS": [],
+  "BILLINGDOCUMBER": "",
+  "BILLINGDOCDATE": "",
+  "TESTRUN": "X"
+}

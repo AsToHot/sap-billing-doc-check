@@ -1,0 +1,10 @@
+node_modules/
+__pycache__/
+*.pyc
+*.log
+*.trc
+.env
+NW-RFC-SDK/
+*.xlsx
+*.xls
+billing-log.jsonl
