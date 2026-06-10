@@ -10,9 +10,12 @@
 
 一个 **OpenClaw AgentSkill**，让 AI Agent 能够通过自然语言指令完成 SAP 开票全流程：
 
-- 用户说"查一下昨天发货"→ Agent 自动执行 `fetch-delivery-data.js`
-- 用户说"把这些开票"→ Agent 解析 Excel/图片，自动调用 `create-billing.js` 执行 VF01
-- 用户说"冲销 9000000675"→ Agent 调用 `--cancel` 执行 VF11
+| 用户说 | Agent 自动执行 |
+|--------|---------------|
+| "查一下昨天发货" | 执行 `fetch-delivery-data.js`，返回 JSON/Excel |
+| "把这些开票" | 解析 Excel/图片，调用 `create-billing.js` 执行 VF01 |
+| "冲销 9000000675" | 调用 `--cancel` 执行 VF11，交互式确认 |
+| "开票日志" | 读取 `billing-log.jsonl`，生成汇总报表 |
 
 **触发词**：`对账开票` | `开票` | `VF01` | `VF11` | `未开票` | `发货记录` | `交货单`
 
@@ -53,32 +56,27 @@
 
 ---
 
-## 安装（OpenClaw 环境）
+## 安装
+
+OpenClaw 会自动处理技能安装。手动安装时：
 
 ```bash
-# 1. 克隆到 OpenClaw skills 目录
 cd ~/.openclaw/workspace/skills
 git clone https://github.com/AsToHot/sap-billing-doc-check.git
-
-# 2. 安装依赖
 cd sap-billing-doc-check
 npm install
-
-# 3. 配置 SAP 连接
-cp .env .env.local  # 编辑 .env.local 填入实际参数
-
-# 4. 下载 NW-RFC-SDK（SAP 专有，需自行获取）
-# 放置到 NW-RFC-SDK/nwrfcsdk/ 目录
-
-# 5. 启动 RFC 代理
-bash auto-proxy.sh
 ```
+
+**前置依赖**（需手动准备）：
+- **NW-RFC-SDK** — SAP 专有软件，需从 [SAP Support Portal](https://support.sap.com/en/nwrfcsdk.html) 获取
+- 当前环境使用版本：**SAP NW-RFC-SDK 7.50 for Linux x86_64**
+- 下载后放置到 `NW-RFC-SDK/nwrfcsdk/` 目录
 
 ---
 
-## 配置说明
+## 配置
 
-`.env` 模板：
+`.env` 文件（OpenClaw 加载时自动读取）：
 
 ```bash
 # SAP target system URL（仅用于提取 ashost）
@@ -101,33 +99,6 @@ SAP_CONNECTION_TYPE=rfc
 
 ---
 
-## Agent 调用示例
-
-```bash
-# Agent 查交货单（最近3月）
-node scripts/fetch-delivery-data.js --client <KUNNR>
-
-# Agent 按销售组织查
-node scripts/fetch-delivery-data.js --vkorg <VKORG>
-
-# Agent 单号直查
-node scripts/fetch-delivery-data.js --vbeln <VBELN>
-
-# Agent 开票（先 testrun 确认）
-node scripts/create-billing.js --testrun '<JSON>'
-
-# Agent 正式开票
-node scripts/create-billing.js '<JSON>'
-
-# Agent 冲销
-node scripts/create-billing.js --cancel <BillingDoc>
-
-# Agent 查看日志
-node scripts/create-billing.js --show-log
-```
-
----
-
 ## ⚠️ 核心警告：幽灵凭证
 
 **BAPI 返回成功 ≠ 数据已持久化。**
@@ -143,11 +114,11 @@ VBRK 查不到记录                ❌  幽灵凭证
 
 ---
 
-## 故障排查（Agent 视角）
+## 故障排查
 
-| 现象 | 原因 | Agent 解决 |
-|------|------|-----------|
-| `ECONNREFUSED 127.0.0.1:9876` | RFC 代理未启动 | 自动执行 `bash auto-proxy.sh` |
+| 现象 | 原因 | 解决 |
+|------|------|------|
+| `ECONNREFUSED 127.0.0.1:9876` | RFC 代理未启动 | Agent 自动执行 `bash auto-proxy.sh` |
 | HTTP 502 | SAP 后端未就绪 | 等 10 秒重试；kill 旧代理重启 |
 | `ERR_DLOPEN_FAILED` | 找不到 `libsapnwrfc.so` | 检查 `LD_LIBRARY_PATH` 含 SDK lib |
 | ADT 缓存不一致 | 偶发 | 脚本已内置 FKSTA 双向验证 |
